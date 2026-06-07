@@ -13,6 +13,7 @@ import com.xiaoju.framework.entity.persistent.Biz;
 import com.xiaoju.framework.entity.persistent.CaseBackup;
 import com.xiaoju.framework.entity.persistent.ExecRecord;
 import com.xiaoju.framework.entity.persistent.TestCase;
+import com.xiaoju.framework.entity.request.cases.AiResultSaveReq;
 import com.xiaoju.framework.entity.request.cases.CaseConditionReq;
 import com.xiaoju.framework.entity.request.cases.CaseCreateReq;
 import com.xiaoju.framework.entity.request.cases.CaseEditReq;
@@ -384,6 +385,7 @@ public class CaseServiceImpl implements CaseService {
         ret.setGmtCreated(new Date());
         ret.setGmtModified(new Date());
         ret.setCaseContent(content);
+        ret.setIsClickable(request.getIsClickable());
         return ret;
     }
 
@@ -431,5 +433,49 @@ public class CaseServiceImpl implements CaseService {
         biz.setContent(JSON.toJSONString(tree));
         biz.setGmtModified(new Date());
         bizMapper.update(biz);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void saveAiResult(AiResultSaveReq request) {
+        request.validate();
+        TestCase testCase = caseMapper.selectOne(request.getCaseId());
+        if (testCase == null) {
+            throw new CaseServerException("用例不存在", StatusCode.NOT_FOUND_ENTITY);
+        }
+        if (!Integer.valueOf(0).equals(testCase.getIsClickable())) {
+            throw new CaseServerException("该用例已处于可点击状态，无需重复保存", StatusCode.INTERNAL_ERROR);
+        }
+
+        // caseContent 可能是 Object（JSON对象）或 String，统一转为 JSON 字符串
+        Object contentObj = request.getCaseContent();
+        String caseContentStr;
+        if (contentObj instanceof String) {
+            caseContentStr = (String) contentObj;
+        } else {
+            caseContentStr = JSON.toJSONString(contentObj);
+        }
+
+        testCase.setCaseContent(caseContentStr);
+        testCase.setIsClickable(1);
+        caseMapper.update(testCase);
+        LOGGER.info("[AI Save Result] Successfully saved AI result for caseId={}, taskId={}", request.getCaseId(), request.getTaskId());
+    }
+
+    @Override
+    public List<Map<String, Object>> checkStatus(List<Long> caseIds) {
+        List<Map<String, Object>> result = new ArrayList<>();
+        for (Long caseId : caseIds) {
+            Map<String, Object> item = new HashMap<>();
+            item.put("caseId", caseId);
+            TestCase testCase = caseMapper.selectOne(caseId);
+            if (testCase != null && testCase.getIsClickable() != null) {
+                item.put("isClickable", testCase.getIsClickable() == 1);
+            } else {
+                item.put("isClickable", true);
+            }
+            result.add(item);
+        }
+        return result;
     }
 }

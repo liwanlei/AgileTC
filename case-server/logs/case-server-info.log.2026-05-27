@@ -1,0 +1,64 @@
+2026-05-27 21:42:03.258 [restartedMain][INFO ][org.springframework.boot.StartupInfoLogger.logStarting(StartupInfoLogger.java:50)]:Starting CaseServerApplication on lileileideMacBook-Pro-3.local with PID 4402 (/Users/lileilei/Desktop/AgileTC/case-server/target/classes started by lileilei in /Users/lileilei/Desktop/AgileTC/case-server)
+2026-05-27 21:42:03.259 [restartedMain][INFO ][org.springframework.boot.SpringApplication.logStartupProfileInfo(SpringApplication.java:652)]:The following profiles are active: dev
+2026-05-27 21:42:03.308 [restartedMain][INFO ][org.springframework.boot.logging.DeferredLog.logTo(DeferredLog.java:225)]:For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-05-27 21:42:04.582 [restartedMain][INFO ][org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker.postProcessAfterInitialization(PostProcessorRegistrationDelegate.java:330)]:Bean 'org.springframework.ws.config.annotation.DelegatingWsConfiguration' of type [org.springframework.ws.config.annotation.DelegatingWsConfiguration$$EnhancerBySpringCGLIB$$1a11abe6] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2026-05-27 21:42:04.651 [restartedMain][INFO ][org.springframework.ws.soap.addressing.server.AbstractAddressingEndpointMapping.afterPropertiesSet(AbstractAddressingEndpointMapping.java:236)]:Supporting [WS-Addressing August 2004, WS-Addressing 1.0]
+2026-05-27 21:42:04.754 [restartedMain][INFO ][com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure.dataSource(DruidDataSourceAutoConfigure.java:56)]:Init DruidDataSource
+2026-05-27 21:42:05.130 [restartedMain][INFO ][com.alibaba.druid.pool.DruidDataSource.init(DruidDataSource.java:1002)]:{dataSource-1} inited
+2026-05-27 21:42:05.721 [restartedMain][INFO ][org.springframework.boot.web.embedded.tomcat.TomcatWebServer.initialize(TomcatWebServer.java:90)]:Tomcat initialized with port(s): 8443 (http) 8094 (http)
+2026-05-27 21:42:05.739 [restartedMain][INFO ][org.apache.juli.logging.DirectJDKLog.log(DirectJDKLog.java:173)]:Initializing ProtocolHandler ["http-nio-8443"]
+2026-05-27 21:42:05.750 [restartedMain][INFO ][org.apache.juli.logging.DirectJDKLog.log(DirectJDKLog.java:173)]:Initializing ProtocolHandler ["http-nio-8094"]
+2026-05-27 21:42:05.773 [restartedMain][INFO ][org.apache.juli.logging.DirectJDKLog.log(DirectJDKLog.java:173)]:Starting service [Tomcat]
+2026-05-27 21:42:05.774 [restartedMain][INFO ][org.apache.juli.logging.DirectJDKLog.log(DirectJDKLog.java:173)]:Starting Servlet engine: [Apache Tomcat/9.0.24]
+2026-05-27 21:42:05.864 [restartedMain][INFO ][org.apache.juli.logging.DirectJDKLog.log(DirectJDKLog.java:173)]:Initializing Spring embedded WebApplicationContext
+2026-05-27 21:42:05.864 [restartedMain][INFO ][org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.prepareWebApplicationContext(ServletWebServerApplicationContext.java:284)]:Root WebApplicationContext: initialization completed in 2556 ms
+2026-05-27 21:42:05.960 [restartedMain][INFO ][com.xiaoju.framework.listener.IocCloseListener.contextInitialized(IocCloseListener.java:25)]:[监听器注册成功..]com.xiaoju.framework.listener.IocCloseListener
+2026-05-27 21:42:06.127 [restartedMain][INFO ][com.corundumstudio.socketio.SocketIOServer.startAsync(SocketIOServer.java:146)]:Session store / pubsub factory used: MemoryStoreFactory (local session store only)
+2026-05-27 21:42:06.311 [nioEventLoopGroup-2-1][INFO ][com.corundumstudio.socketio.SocketIOServer$1.operationComplete(SocketIOServer.java:171)]:SocketIO server started at port: 8095
+2026-05-27 21:42:06.311 [restartedMain][INFO ][com.xiaoju.framework.handler.SocketIOServiceImpl.start(SocketIOServiceImpl.java:214)]:socket server start.
+2026-05-27 21:42:06.457 [restartedMain][INFO ][org.springframework.scheduling.concurrent.ExecutorConfigurationSupport.initialize(ExecutorConfigurationSupport.java:171)]:Initializing ExecutorService 'applicationTaskExecutor'
+2026-05-27 21:42:06.612 [restartedMain][INFO ][org.springframework.boot.autoconfigure.web.servlet.WelcomePageHandlerMapping.<init>(WelcomePageHandlerMapping.java:54)]:Adding welcome page: class path resource [web/dist/index.html]
+2026-05-27 21:42:06.848 [restartedMain][WARN ][org.thymeleaf.templatemode.TemplateMode.parse(TemplateMode.java:150)]:[THYMELEAF][restartedMain] Template Mode 'LEGACYHTML5' is deprecated. Using Template Mode 'HTML' instead.
+2026-05-27 21:42:07.225 [restartedMain][INFO ][org.springframework.boot.devtools.autoconfigure.OptionalLiveReloadServer.startServer(OptionalLiveReloadServer.java:57)]:LiveReload server is running on port 35729
+2026-05-27 21:42:07.367 [restartedMain][INFO ][org.apache.juli.logging.DirectJDKLog.log(DirectJDKLog.java:173)]:Starting ProtocolHandler ["http-nio-8443"]
+2026-05-27 21:42:07.429 [restartedMain][INFO ][org.apache.juli.logging.DirectJDKLog.log(DirectJDKLog.java:173)]:Starting ProtocolHandler ["http-nio-8094"]
+2026-05-27 21:42:07.441 [restartedMain][INFO ][org.springframework.boot.web.embedded.tomcat.TomcatWebServer.start(TomcatWebServer.java:202)]:Tomcat started on port(s): 8443 (http) 8094 (http) with context path ''
+2026-05-27 21:42:07.450 [restartedMain][INFO ][org.springframework.boot.StartupInfoLogger.logStarted(StartupInfoLogger.java:59)]:Started CaseServerApplication in 4.566 seconds (JVM running for 6.689)
+2026-05-27 21:42:14.756 [http-nio-8094-exec-1][INFO ][org.apache.juli.logging.DirectJDKLog.log(DirectJDKLog.java:173)]:Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-05-27 21:42:14.758 [http-nio-8094-exec-1][INFO ][org.springframework.web.servlet.FrameworkServlet.initServletBean(FrameworkServlet.java:524)]:Initializing Servlet 'dispatcherServlet'
+2026-05-27 21:42:14.797 [http-nio-8094-exec-1][INFO ][org.springframework.web.servlet.FrameworkServlet.initServletBean(FrameworkServlet.java:546)]:Completed initialization in 38 ms
+2026-05-27 21:42:48.464 [nioEventLoopGroup-3-1][INFO ][com.xiaoju.framework.handler.RoomEntity.<init>(RoomEntity.java:43)]:case content is: {"root":{"data":{"id":"bv8nxhi3c800","created":1562059643204,"text":"中心主题"},"children":[]},"template":"default","theme":"fresh-blue","version":"1.4.43","base":0}
+2026-05-27 21:42:48.464 [nioEventLoopGroup-3-1][INFO ][com.xiaoju.framework.handler.RoomEntity.addClient(RoomEntity.java:50)]:add client, current user number:1, name: admin
+2026-05-27 21:42:48.464 [nioEventLoopGroup-3-1][INFO ][com.xiaoju.framework.handler.SocketIOServiceImpl.lambda$0(SocketIOServiceImpl.java:103)]:add case client room map size: 1
+2026-05-27 21:42:48.466 [nioEventLoopGroup-3-1][INFO ][com.xiaoju.framework.handler.SocketIOServiceImpl.lambda$0(SocketIOServiceImpl.java:114)]:connected caseId: 2207, roomId: 2207
+2026-05-27 21:42:48.466 [pool-3-thread-1][INFO ][com.xiaoju.framework.handler.NotifyEgressTask.run(NotifyEgressTask.java:17)]:notify egress message: PushMessage(userName=null, message=admin)
+2026-05-27 21:42:48.477 [nioEventLoopGroup-3-1][INFO ][com.xiaoju.framework.handler.RoomEntity.addClient(RoomEntity.java:50)]:add client, current user number:1, name: admin
+2026-05-27 21:42:48.477 [nioEventLoopGroup-3-1][INFO ][com.xiaoju.framework.handler.SocketIOServiceImpl.lambda$0(SocketIOServiceImpl.java:103)]:add case client room map size: 1
+2026-05-27 21:42:48.477 [nioEventLoopGroup-3-1][INFO ][com.xiaoju.framework.handler.SocketIOServiceImpl.lambda$0(SocketIOServiceImpl.java:114)]:connected caseId: 2207, roomId: 2207
+2026-05-27 21:42:48.477 [pool-3-thread-1][INFO ][com.xiaoju.framework.handler.NotifyEgressTask.run(NotifyEgressTask.java:17)]:notify egress message: PushMessage(userName=null, message=admin)
+2026-05-27 21:42:51.544 [pool-2-thread-1][INFO ][com.xiaoju.framework.handler.EditIngressTask.run(EditIngressTask.java:29)]:[[{"op":"add","path":"/root/children/0","value":{"data":{"id":"diti4h7ix5s0","created":1779889371509,"text":"分支主题"},"children":[]}}]]
+2026-05-27 21:42:51.556 [pool-2-thread-1][WARN ][com.xiaoju.framework.handler.EditIngressTask.run(EditIngressTask.java:60)]:version of case in memory is smaller than client. version is: 0, client version: 1
+2026-05-27 21:42:55.393 [pool-2-thread-2][INFO ][com.xiaoju.framework.handler.EditIngressTask.run(EditIngressTask.java:29)]:[[{"op":"replace","path":"/root/children/0/data/text","value":"测试"}]]
+2026-05-27 21:42:55.394 [pool-2-thread-2][WARN ][com.xiaoju.framework.handler.EditIngressTask.run(EditIngressTask.java:60)]:version of case in memory is smaller than client. version is: 2, client version: 2
+2026-05-27 21:43:01.715 [pool-2-thread-1][INFO ][com.xiaoju.framework.handler.SaveIngressTask.run(SaveIngressTask.java:32)]:pool-2-thread-1: 手动保存用例。
+2026-05-27 21:43:01.744 [pool-2-thread-1][INFO ][com.xiaoju.framework.handler.SaveIngressTask.run(SaveIngressTask.java:65)]:备份保存当前用例。caseid:2207
+2026-05-27 21:43:01.744 [pool-2-thread-1][INFO ][com.xiaoju.framework.handler.SaveIngressTask.run(SaveIngressTask.java:67)]:pool-2-thread-1: 手动保存结束。
+2026-05-27 21:43:02.384 [pool-2-thread-2][INFO ][com.xiaoju.framework.handler.SaveIngressTask.run(SaveIngressTask.java:32)]:pool-2-thread-2: 手动保存用例。
+2026-05-27 21:43:02.390 [pool-2-thread-2][INFO ][com.xiaoju.framework.handler.SaveIngressTask.run(SaveIngressTask.java:51)]:当前内容已经保存过了，不再重复保存。
+2026-05-27 21:43:06.448 [pool-2-thread-1][INFO ][com.xiaoju.framework.handler.EditIngressTask.run(EditIngressTask.java:29)]:[[{"op":"replace","path":"/template","value":"right"}]]
+2026-05-27 21:43:06.449 [pool-2-thread-1][WARN ][com.xiaoju.framework.handler.EditIngressTask.run(EditIngressTask.java:60)]:version of case in memory is smaller than client. version is: 3, client version: 3
+2026-05-27 21:43:09.061 [pool-2-thread-2][INFO ][com.xiaoju.framework.handler.EditIngressTask.run(EditIngressTask.java:29)]:[[{"op":"replace","path":"/template","value":"fish-bone"}]]
+2026-05-27 21:43:09.061 [pool-2-thread-2][WARN ][com.xiaoju.framework.handler.EditIngressTask.run(EditIngressTask.java:60)]:version of case in memory is smaller than client. version is: 4, client version: 4
+2026-05-27 21:43:11.517 [pool-2-thread-1][INFO ][com.xiaoju.framework.handler.EditIngressTask.run(EditIngressTask.java:29)]:[[{"op":"replace","path":"/template","value":"default"}]]
+2026-05-27 21:43:11.517 [pool-2-thread-1][WARN ][com.xiaoju.framework.handler.EditIngressTask.run(EditIngressTask.java:60)]:version of case in memory is smaller than client. version is: 5, client version: 5
+2026-05-27 21:43:12.959 [pool-2-thread-2][INFO ][com.xiaoju.framework.handler.EditIngressTask.run(EditIngressTask.java:29)]:[[{"op":"replace","path":"/theme","value":"classic-compact"}]]
+2026-05-27 21:43:12.960 [pool-2-thread-2][WARN ][com.xiaoju.framework.handler.EditIngressTask.run(EditIngressTask.java:60)]:version of case in memory is smaller than client. version is: 6, client version: 6
+2026-05-27 21:43:14.803 [pool-2-thread-1][INFO ][com.xiaoju.framework.handler.EditIngressTask.run(EditIngressTask.java:29)]:[[{"op":"replace","path":"/theme","value":"fresh-blue"}]]
+2026-05-27 21:43:14.804 [pool-2-thread-1][WARN ][com.xiaoju.framework.handler.EditIngressTask.run(EditIngressTask.java:60)]:version of case in memory is smaller than client. version is: 7, client version: 7
+2026-05-27 21:43:16.331 [pool-2-thread-2][INFO ][com.xiaoju.framework.handler.EditIngressTask.run(EditIngressTask.java:29)]:[[{"op":"replace","path":"/theme","value":"fresh-green-compat"}]]
+2026-05-27 21:43:16.331 [pool-2-thread-2][WARN ][com.xiaoju.framework.handler.EditIngressTask.run(EditIngressTask.java:60)]:version of case in memory is smaller than client. version is: 8, client version: 8
+2026-05-27 21:43:18.446 [pool-2-thread-1][INFO ][com.xiaoju.framework.handler.EditIngressTask.run(EditIngressTask.java:29)]:[[{"op":"replace","path":"/theme","value":"fresh-blue"}]]
+2026-05-27 21:43:18.446 [pool-2-thread-1][WARN ][com.xiaoju.framework.handler.EditIngressTask.run(EditIngressTask.java:60)]:version of case in memory is smaller than client. version is: 9, client version: 9
+2026-05-27 21:43:27.474 [nioEventLoopGroup-3-1][INFO ][com.xiaoju.framework.handler.RoomEntity.removeClient(RoomEntity.java:56)]:remove client, current user number:0
+2026-05-27 21:43:27.497 [nioEventLoopGroup-3-1][INFO ][com.xiaoju.framework.handler.SocketIOServiceImpl.lambda$1(SocketIOServiceImpl.java:156)]:remove case client room map size: 0
+2026-05-27 21:43:27.498 [pool-3-thread-1][INFO ][com.xiaoju.framework.handler.NotifyEgressTask.run(NotifyEgressTask.java:17)]:notify egress message: PushMessage(userName=null, message=)

@@ -8,10 +8,24 @@ import com.xiaoju.framework.entity.response.controller.Response;
 import com.xiaoju.framework.service.CaseService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 用例相关接口
@@ -28,6 +42,9 @@ public class CaseController {
 
     @Resource
     CaseService caseService;
+
+    @Value("${ai.service.url}")
+    private String aiServiceUrl;
 
     /**
      * 用例 - 根据文件夹id获取所有用例
@@ -198,6 +215,126 @@ public class CaseController {
             e.printStackTrace();
             LOGGER.error("[Case Update]Update test case failed. params={} e={} ", req.toString(), e.getMessage());
             return Response.build(StatusCode.SERVER_BUSY_ERROR);
+        }
+    }
+
+    /**
+     * AI - 保存AI生成的用例结果
+     *
+     * @param request 请求体
+     * @return 响应体
+     */
+    @PostMapping(value = "/saveAiResult")
+    public Response<?> saveAiResult(@RequestBody AiResultSaveReq request) {
+        request.validate();
+        try {
+            caseService.saveAiResult(request);
+            return Response.success();
+        } catch (CaseServerException e) {
+            throw new CaseServerException(e.getLocalizedMessage(), e.getStatus());
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOGGER.error("[AI Save Result] Save AI result failed. params={}, e={} ", request.toString(), e.getMessage());
+            return Response.build(StatusCode.SERVER_BUSY_ERROR);
+        }
+    }
+
+    /**
+     * AI - 检查用例是否可点击
+     *
+     * @param caseIds 用例ID列表，逗号分隔
+     * @return 状态列表
+     */
+    @GetMapping(value = "/checkStatus")
+    public Response<?> checkStatus(@RequestParam String caseIds) {
+        try {
+            List<Long> idList = Arrays.stream(caseIds.split(","))
+                    .map(String::trim)
+                    .map(Long::parseLong)
+                    .collect(Collectors.toList());
+            return Response.success(caseService.checkStatus(idList));
+        } catch (Exception e) {
+            LOGGER.error("[Check Status] Check status failed. caseIds={}, e={} ", caseIds, e.getMessage());
+            return Response.build(StatusCode.DATA_FORMAT_ERROR);
+        }
+    }
+
+
+    /**
+     * AI - 代理转发请求到AI服务
+     */
+    @PostMapping(value = "/aiRun")
+    public void aiRun(
+            @RequestParam(required = false) String task,
+            @RequestParam(required = false) String doc_url,
+            @RequestParam(required = false) MultipartFile file,
+            @RequestParam Long caseId,
+            HttpServletResponse response
+    ) {
+        try {
+            URL url = new URL(aiServiceUrl);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("POST");
+            conn.setDoOutput(true);
+            conn.setReadTimeout(60000);
+            conn.setConnectTimeout(10000);
+
+            String boundary = "----WebKitFormBoundary" + System.currentTimeMillis();
+            conn.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
+
+            OutputStream os = conn.getOutputStream();
+
+            // 传递 caseId 给 AI 服务
+            os.write(("--" + boundary + "\r\n").getBytes(StandardCharsets.UTF_8));
+            os.write("Content-Disposition: form-data; name=\"caseId\"\r\n\r\n".getBytes(StandardCharsets.UTF_8));
+            os.write(String.valueOf(caseId).getBytes(StandardCharsets.UTF_8));
+            os.write("\r\n".getBytes(StandardCharsets.UTF_8));
+
+            if (task != null && !task.isEmpty()) {
+                os.write(("--" + boundary + "\r\n").getBytes(StandardCharsets.UTF_8));
+                os.write("Content-Disposition: form-data; name=\"task\"\r\n\r\n".getBytes(StandardCharsets.UTF_8));
+                os.write(task.getBytes(StandardCharsets.UTF_8));
+                os.write("\r\n".getBytes(StandardCharsets.UTF_8));
+            }
+
+            if (doc_url != null && !doc_url.isEmpty()) {
+                os.write(("--" + boundary + "\r\n").getBytes(StandardCharsets.UTF_8));
+                os.write("Content-Disposition: form-data; name=\"doc_url\"\r\n\r\n".getBytes(StandardCharsets.UTF_8));
+                os.write(doc_url.getBytes(StandardCharsets.UTF_8));
+                os.write("\r\n".getBytes(StandardCharsets.UTF_8));
+            }
+
+            if (file != null && !file.isEmpty()) {
+                os.write(("--" + boundary + "\r\n").getBytes(StandardCharsets.UTF_8));
+                os.write(("Content-Disposition: form-data; name=\"file\"; filename=\"" + file.getOriginalFilename() + "\"\r\n").getBytes(StandardCharsets.UTF_8));
+                os.write(("Content-Type: " + file.getContentType() + "\r\n\r\n").getBytes(StandardCharsets.UTF_8));
+                os.write(file.getBytes());
+                os.write("\r\n".getBytes(StandardCharsets.UTF_8));
+            }
+
+            os.write(("--" + boundary + "--\r\n").getBytes(StandardCharsets.UTF_8));
+            os.flush();
+            os.close();
+
+            response.setStatus(conn.getResponseCode());
+            response.setContentType(conn.getContentType());
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(
+                    conn.getResponseCode() >= 400 ? conn.getErrorStream() : conn.getInputStream()
+            ));
+            String line;
+            OutputStream out = response.getOutputStream();
+            while ((line = br.readLine()) != null) {
+                out.write(line.getBytes(StandardCharsets.UTF_8));
+            }
+            out.flush();
+            br.close();
+            conn.disconnect();
+
+            LOGGER.info("[AI Proxy] Forwarded AI run request for caseId={}", caseId);
+        } catch (Exception e) {
+            LOGGER.error("[AI Proxy] Forward AI run request failed. caseId={}, e={}", caseId, e.getMessage());
+            e.printStackTrace();
         }
     }
 

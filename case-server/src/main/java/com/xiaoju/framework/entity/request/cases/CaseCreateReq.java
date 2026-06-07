@@ -76,6 +76,11 @@ public class CaseCreateReq implements ParamValidate {
      */
     private String description;
 
+    /**
+     * 非必填 是否可点击，默认1。AI生成占位用例传0
+     */
+    private Integer isClickable;
+
     @Override
     public void validate() {
         // 复制操作才需要id
@@ -118,6 +123,9 @@ public class CaseCreateReq implements ParamValidate {
         }
         if (description == null) {
             description = SystemConstant.EMPTY_STR;
+        }
+        if (isClickable == null) {
+            isClickable = 1;
         }
     }
 }

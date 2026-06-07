@@ -114,3 +114,6 @@ INSERT INTO `authority` (id,authority_name,authority_desc,authority_content) VAL
 INSERT INTO `authority` (id,authority_name,authority_desc,authority_content) VALUES (2, 'ROLE_ADMIN', '管理员', '/api/dir/list,/api/backup/**,/api/record/**,/api/file/**,/api/user/**,/api/case/**');
 INSERT INTO `authority` (id,authority_name,authority_desc,authority_content) VALUES (3, 'ROLE_SA', '超级管理员','/api/**');
 
+# AI用例生成 - 增加用例是否可点击字段
+alter table test_case add column is_clickable tinyint(1) not null default 1 comment '是否可点击: 0-不可点击(生成中) 1-可点击';
+

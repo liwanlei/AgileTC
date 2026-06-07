@@ -1,5 +1,6 @@
 package com.xiaoju.framework.service;
 
+import com.xiaoju.framework.entity.request.cases.AiResultSaveReq;
 import com.xiaoju.framework.entity.request.cases.CaseConditionReq;
 import com.xiaoju.framework.entity.request.cases.CaseCreateReq;
 import com.xiaoju.framework.entity.request.cases.CaseEditReq;
@@ -14,6 +15,7 @@ import com.xiaoju.framework.entity.response.controller.PageModule;
 import com.xiaoju.framework.entity.response.dir.DirTreeResp;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 用例接口
@@ -94,4 +96,19 @@ public interface CaseService {
      * @param req 请求体
      */
     void wsSave(WsSaveReq req);
+
+    /**
+     * 保存AI生成的用例内容并更新状态为可点击
+     *
+     * @param request AI结果保存请求
+     */
+    void saveAiResult(AiResultSaveReq request);
+
+    /**
+     * 批量查询用例的可点击状态
+     *
+     * @param caseIds 用例ID列表
+     * @return 状态列表
+     */
+    List<Map<String, Object>> checkStatus(List<Long> caseIds);
 }

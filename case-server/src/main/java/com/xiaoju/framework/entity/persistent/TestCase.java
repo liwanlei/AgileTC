@@ -58,4 +58,9 @@ public class TestCase {
     private Integer channel;
 
     private String bizId;
+
+    /**
+     * 是否可点击: 0-不可点击(生成中) 1-可点击
+     */
+    private Integer isClickable;
 }
