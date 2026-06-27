@@ -13,6 +13,7 @@ import {
   Col,
   TreeSelect,
   Radio,
+  Select,
 } from 'antd';
 const { Dragger } = Upload;
 import './index.scss';
@@ -65,6 +66,8 @@ class CaseModal extends React.Component {
       aiDocUrl: '',
       aiFile: null,
       aiLoading: false,
+      knowledgeBaseList: [],
+      selectedKnowledgeBaseId: '',
     };
   }
   componentDidMount() {
@@ -75,6 +78,7 @@ class CaseModal extends React.Component {
     this.props.data &&
       this.props.data.requirementId &&
       this.getRequirementsById(this.props.data.requirementId);
+    this.fetchKnowledgeBases();
   }
   componentWillReceiveProps(nextProps) {
     this.setState(nextProps);
@@ -116,12 +120,24 @@ class CaseModal extends React.Component {
     });
   };
   getRequirementsById = requirementIds => {
-    // request(`${this.props.oeApiPrefix}/business-lines/requirements`, {
+    // request(`${this.props.oeApiPrefix}/business-lines  /requirements`, {
     //   method: 'GET',
     //   params: { requirementIds: requirementIds },
     // }).then(res => {
     //   this.setState({ requirementArr: res });
     // });
+  };
+  fetchKnowledgeBases = () => {
+    request('/case/knowledge/bases', {
+      method: 'GET',
+      params: { status: 'active' },
+    })
+      .then(res => {
+        this.setState({ knowledgeBaseList: res.items || [] });
+      })
+      .catch(err => {
+        console.error('Fetch knowledge bases error:', err);
+      });
   };
   handleOk = () => {
     const { operate } = this.state;
@@ -184,6 +200,9 @@ class CaseModal extends React.Component {
           if (aiDocUrl) formData.append('doc_url', aiDocUrl);
           if (aiFile) formData.append('file', aiFile);
           formData.append('caseId', caseId);
+          if (this.state.selectedKnowledgeBaseId) {
+            formData.append('knowledge_base_id', this.state.selectedKnowledgeBaseId);
+          }
 
           fetch(`${this.props.doneApiPrefix}/api/case/aiRun`, {
             method: 'POST',
@@ -558,11 +577,27 @@ class CaseModal extends React.Component {
                   )}
                 </Dragger>
                 <div style={{ marginTop: '8px', color: '#999' }}>
-                  支持 Markdown / TXT / PDF 文档上传（非必传）
-                </div>
-              </Col>
-            </Row>
-          </div>
+                支持 Markdown / TXT / PDF 文档上传（非必传）
+              </div>
+            </Col>
+          </Row>
+
+          <Form.Item {...formItemLayout} label="关联知识库：">
+            <Select
+              placeholder="选择已有知识库（可选）"
+              allowClear
+              value={this.state.selectedKnowledgeBaseId}
+              onChange={value => this.setState({ selectedKnowledgeBaseId: value })}
+              style={{ width: '100%' }}
+            >
+              {this.state.knowledgeBaseList.map(kb => (
+                <Select.Option key={kb.id} value={kb.id}>
+                  {kb.title} ({kb.item_count} 个知识点)
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+        </div>
         )}
       </Modal>
     );

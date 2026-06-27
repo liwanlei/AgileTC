@@ -1,0 +1,2 @@
+2026-06-14 20:12:22.185 [http-nio-8094-exec-5][ERROR][com.xiaoju.framework.controller.KnowledgeController.proxyKnowledgeRequest(KnowledgeController.java:87)]:[Knowledge Proxy] Proxy request failed. e=Connection refused (Connection refused) 
+2026-06-14 20:12:25.203 [http-nio-8094-exec-9][ERROR][com.xiaoju.framework.controller.KnowledgeController.proxyKnowledgeRequest(KnowledgeController.java:87)]:[Knowledge Proxy] Proxy request failed. e=Connection refused (Connection refused) 

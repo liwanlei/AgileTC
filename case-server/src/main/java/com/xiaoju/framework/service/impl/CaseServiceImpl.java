@@ -478,4 +478,66 @@ public class CaseServiceImpl implements CaseService {
         }
         return result;
     }
+
+    @Override
+    public Map<String, Object> getCaseJson(Long caseId) {
+        TestCase testCase = caseMapper.selectOne(caseId);
+        if (testCase == null) {
+            throw new CaseServerException("用例不存在", StatusCode.NOT_FOUND_ENTITY);
+        }
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("id", testCase.getId());
+        result.put("title", testCase.getTitle());
+
+        // 将 caseContent 字符串解析为 JSON 对象返回
+        String caseContent = testCase.getCaseContent();
+        if (caseContent != null && !caseContent.isEmpty()) {
+            try {
+                result.put("caseContent", JSON.parseObject(caseContent));
+            } catch (Exception e) {
+                result.put("caseContent", caseContent);
+            }
+        } else {
+            result.put("caseContent", null);
+        }
+
+        result.put("isClickable", testCase.getIsClickable());
+        result.put("updated_at", testCase.getGmtModified());
+
+        // 查找用例所属的分类名称
+        String categoryName = findCategoryName(testCase);
+        result.put("categoryName", categoryName);
+
+        return result;
+    }
+
+    /**
+     * 通过 bizId 在目录树中查找用例所属分类名称
+     */
+    private String findCategoryName(TestCase testCase) {
+        if (testCase.getBizId() == null || testCase.getBizId().isEmpty()) {
+            return "未分类";
+        }
+        try {
+            DirNodeDto tree = dirService.getDirTree(testCase.getProductLineId(), testCase.getChannel());
+            DirNodeDto node = findNodeInTree(tree, testCase.getBizId());
+            return node != null ? node.getText() : "未分类";
+        } catch (Exception e) {
+            return "未分类";
+        }
+    }
+
+    /**
+     * 递归查找目录树中指定 id 的节点
+     */
+    private DirNodeDto findNodeInTree(DirNodeDto node, String bizId) {
+        if (node == null) return null;
+        if (bizId.equals(node.getId())) return node;
+        for (DirNodeDto child : node.getChildren()) {
+            DirNodeDto found = findNodeInTree(child, bizId);
+            if (found != null) return found;
+        }
+        return null;
+    }
 }

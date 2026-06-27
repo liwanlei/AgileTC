@@ -259,6 +259,25 @@ public class CaseController {
         }
     }
 
+    /**
+     * 获取用例的JSON内容
+     *
+     * @param caseId 用例id
+     * @return 用例JSON内容
+     */
+    @GetMapping(value = "/getCaseJson")
+    public Response<?> getCaseJson(@RequestParam @NotNull(message = "用例id为空") Long caseId) {
+        try {
+            return Response.success(caseService.getCaseJson(caseId));
+        } catch (CaseServerException e) {
+            throw new CaseServerException(e.getLocalizedMessage(), e.getStatus());
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOGGER.error("[Get Case Json] Get case json failed. caseId={}, e={} ", caseId, e.getMessage());
+            return Response.build(StatusCode.SERVER_BUSY_ERROR);
+        }
+    }
+
 
     /**
      * AI - 代理转发请求到AI服务
@@ -268,6 +287,7 @@ public class CaseController {
             @RequestParam(required = false) String task,
             @RequestParam(required = false) String doc_url,
             @RequestParam(required = false) MultipartFile file,
+            @RequestParam(required = false) String knowledge_base_id,
             @RequestParam Long caseId,
             HttpServletResponse response
     ) {
@@ -289,6 +309,14 @@ public class CaseController {
             os.write("Content-Disposition: form-data; name=\"caseId\"\r\n\r\n".getBytes(StandardCharsets.UTF_8));
             os.write(String.valueOf(caseId).getBytes(StandardCharsets.UTF_8));
             os.write("\r\n".getBytes(StandardCharsets.UTF_8));
+
+            // 传递 knowledge_base_id 给 AI 服务（可选）
+            if (knowledge_base_id != null && !knowledge_base_id.isEmpty()) {
+                os.write(("--" + boundary + "\r\n").getBytes(StandardCharsets.UTF_8));
+                os.write("Content-Disposition: form-data; name=\"knowledge_base_id\"\r\n\r\n".getBytes(StandardCharsets.UTF_8));
+                os.write(knowledge_base_id.getBytes(StandardCharsets.UTF_8));
+                os.write("\r\n".getBytes(StandardCharsets.UTF_8));
+            }
 
             if (task != null && !task.isEmpty()) {
                 os.write(("--" + boundary + "\r\n").getBytes(StandardCharsets.UTF_8));

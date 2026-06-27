@@ -1,6 +1,7 @@
 /* eslint-disable */
 import React from 'react';
 import PropTypes from 'prop-types';
+import router from 'umi/router';
 import request from '@/utils/axios';
 import { Row, Button, Col, Icon, Form, message } from 'antd';
 import './index.scss';
@@ -53,6 +54,8 @@ class CaseLists extends React.Component {
       treeData: [],
       pollingCaseIds: [],
       pollingTimer: null,
+      selectedCaseIds: [],
+      extractLoading: false,
     };
   }
   componentWillReceiveProps(nextProps) {
@@ -228,8 +231,10 @@ class CaseLists extends React.Component {
     if (this.state.pollingTimer) return;
 
     const timer = setInterval(() => {
+      const ONE_DAY_MS = 24 * 60 * 60 * 1000;
+      const now = Date.now();
       const pendingIds = this.state.list
-        .filter(item => item.isClickable === 0)
+        .filter(item => item.isClickable === 0 && item.gmtCreated && (now - new Date(item.gmtCreated).getTime()) < ONE_DAY_MS)
         .map(item => item.id);
 
       if (pendingIds.length === 0) {
@@ -273,6 +278,56 @@ class CaseLists extends React.Component {
       clearInterval(this.state.pollingTimer);
       this.setState({ pollingTimer: null });
     }
+  };
+
+  handleKnowledgeExtract = () => {
+    const { selectedCaseIds } = this.state;
+    if (!selectedCaseIds || selectedCaseIds.length === 0) {
+      message.warning('请先选择至少一个用例');
+      return;
+    }
+
+    this.setState({ extractLoading: true });
+    request('/case/knowledge/extract', {
+      method: 'POST',
+      body: selectedCaseIds.map(String),
+    })
+      .then(res => {
+        message.success('知识提取任务已提交');
+        this.setState({ extractLoading: false, selectedCaseIds: [] });
+        this.pollKnowledgeTask(res.task_id);
+      })
+      .catch(() => {
+        message.error('知识提取任务提交失败');
+        this.setState({ extractLoading: false });
+      });
+  };
+
+  pollKnowledgeTask = taskId => {
+    const poll = () => {
+      request(`/case/knowledge/tasks/${taskId}`, {
+        method: 'GET',
+      })
+        .then(res => {
+          if (res.status === 'success') {
+            message.success('知识提取完成');
+            const { productLineId } = this.state;
+            router.push(`/knowledge/${productLineId}`);
+          } else if (res.status === 'failed') {
+            message.error('知识提取失败');
+          } else {
+            setTimeout(poll, 3000);
+          }
+        })
+        .catch(() => {
+          setTimeout(poll, 3000);
+        });
+    };
+    setTimeout(poll, 3000);
+  };
+
+  handleCaseSelectChange = ids => {
+    this.setState({ selectedCaseIds: ids });
   };
 
   filterHandler = () => {
@@ -343,6 +398,23 @@ class CaseLists extends React.Component {
                 >
                   <Icon type="plus" /> 新建用例集
                 </Button>
+                <Button
+                                  icon="book"
+                                  style={{ marginLeft: 16 }}
+                                  onClick={() => router.push(`/knowledge/${this.state.productLineId}`)}
+                                >
+                                  知识库管理
+                                </Button>
+                <Button
+                  type="primary"
+                  icon="database"
+                  loading={this.state.extractLoading}
+                  onClick={this.handleKnowledgeExtract}
+                  style={{ marginLeft: 16 }}
+                >
+                  提取用例知识库
+                </Button>
+
               </Col>
             </Row>
             <hr
@@ -373,6 +445,8 @@ class CaseLists extends React.Component {
               createrFilter={createrFilter}
               iterationFilter={iterationFilter}
               choiseDate={choiseDate}
+              selectedCaseIds={this.state.selectedCaseIds}
+              onCaseSelectChange={this.handleCaseSelectChange}
             ></List>
 
             {(filterVisble && (

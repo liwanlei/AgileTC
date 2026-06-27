@@ -1,0 +1,2 @@
+2026-06-06 21:17:47.251 [http-nio-8094-exec-7][ERROR][com.xiaoju.framework.entity.exception.ExpHandler.handlerException(ExpHandler.java:60)]:INTERNAL_ERROR
+2026-06-06 21:24:26.283 [http-nio-8094-exec-1][ERROR][com.xiaoju.framework.entity.exception.ExpHandler.handlerException(ExpHandler.java:70)]:SERVER_BUSY_ERROR

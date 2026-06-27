@@ -54,12 +54,16 @@ class Lists extends React.Component {
       ownerList: [],
       fetching: false,
       requirementSeach: '',
+      selectedRowKeys: [],
     };
     this.lastFetchId = 0;
     this.getOwnerList = debounce(this.getOwnerList, 800);
   }
 
   componentWillReceiveProps(nextProps) {
+    if (this.props.selectedCaseIds !== nextProps.selectedCaseIds) {
+      this.setState({ selectedRowKeys: nextProps.selectedCaseIds || [] });
+    }
     if (this.props.list != nextProps.list) {
       this.setState({ list: nextProps.list }, () => {
         this.setState({
@@ -698,6 +702,15 @@ class Lists extends React.Component {
           loading={loading}
           pagination={false}
           rowClassName={(record) => record.isClickable === 0 ? 'case-item-disabled' : ''}
+          rowSelection={{
+            selectedRowKeys: this.state.selectedRowKeys,
+            onChange: selectedRowKeys => {
+              this.setState({ selectedRowKeys });
+              if (this.props.onCaseSelectChange) {
+                this.props.onCaseSelectChange(selectedRowKeys);
+              }
+            },
+          }}
           expandIcon={props => {
             if (props.record.recordNum > 0) {
               if (!props.expanded) {

@@ -28,6 +28,11 @@ public class WebController {
         return "index";
     }
 
+    @RequestMapping("/knowledge/*")
+    public String knowledge(){
+        return "index";
+    }
+
     @RequestMapping("/caseManager/historyContrast/*/*")
     public String historyContrast(){
         return "index";

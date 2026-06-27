@@ -196,6 +196,10 @@ export default {
           component: './contrast/index.jsx',
         },
         {
+          path: '/knowledge/:productId',
+          component: './knowledge/index.js',
+        },
+        {
           path: '/caseManager/historyContrast/:caseId1/:caseId2',
           component: './contrast/seeResult.js',
         },

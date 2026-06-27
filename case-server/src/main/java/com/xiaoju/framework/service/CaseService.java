@@ -111,4 +111,12 @@ public interface CaseService {
      * @return 状态列表
      */
     List<Map<String, Object>> checkStatus(List<Long> caseIds);
+
+    /**
+     * 获取用例的JSON内容
+     *
+     * @param caseId 用例ID
+     * @return 用例JSON内容
+     */
+    Map<String, Object> getCaseJson(Long caseId);
 }
